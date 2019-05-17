@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Starfield</title>
+	<style type="text/css">
+		canvas{
+			background-color: black;
+			margin:0 auto;
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<canvas width="400" height="400"></canvas>
+<script type="text/javascript">
+	var canvas=document.querySelector("canvas");
+	var ctx=canvas.getContext("2d");
+	var starNumber=40;
+	var size=5;
+	var speed=0.25;
+	var centerX=canvas.width/2;
+	var centerY=canvas.height/2;
+
+function Star(x,y,z) {
+	this.x=x;
+	this.y=y;
+	this.z=z;
+}
+Star.prototype.draw = function() {
+	ctx.beginPath();
+	ctx.fillStyle="white";
+	ctx.arc(this.x,this.y,this.z*size,0,Math.PI*2)
+	ctx.fill();
+};
+Star.prototype.move = function() {
+	//if (this.z<10) {
+	this.z+=.01*this.z;
+//}
+	if (this.x<centerX) {
+		this.x-=speed*this.z;
+	//	this.z+=.01*(this.x/centerX);
+	}if (this.x>centerX) {
+		this.x+=speed*this.z;
+	//	this.z+=.01*(centerX/this.x);
+	}if (this.y<centerY) {
+		this.y-=speed*this.z;
+	//	this.z+=.01*(this.y/centerY);
+	}if (this.y>centerY) {
+		this.y+=speed*this.z;
+	//	this.z+=.01*(centerY/this.y);
+	}if (this.x<0||this.x>canvas.width){
+		this.x=Math.random()*canvas.width;
+		this.z=0.01;
+	}if (this.y<0||this.y>canvas.height) {
+		this.y=Math.random()*canvas.height;
+		this.z=0.5;
+	}
+};
+var stars=[];
+function makeStars(){
+	for(var i=0;i<starNumber;i++){
+		var x=Math.random()*canvas.width;
+		var y=Math.random()*canvas.height;
+		var z=Math.random();
+		var star=new Star(x,y,z);
+		stars.push(star);
+		star.draw();
+	}
+}
+makeStars();
+
+function run(){
+	ctx.beginPath();
+	ctx.fillStyle="rgba(0,0,0,0.15";
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+	ctx.fill();
+	for(var i=0;i<stars.length;i++){
+		stars[i].draw();
+		stars[i].move();
+	}
+}
+setInterval(run,5)
+console.log(stars);
+</script>
+</body>
+</html>
